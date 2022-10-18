@@ -9,10 +9,12 @@ import SwiftUI
 import CoreLocation
 
 struct Main: View {
-    @State private var showModal = false
-    @State private var isHideLoading = true
-    @State private var isLocationHideLoading = true
-    @State private var myLocation = ""
+    @State private var isShowReslutModal = false        // 결과 모달 show/hide
+    @State private var isShowFavoritModal = false       // 선호 음식 모달 show/hide
+    @State private var isHideLoading = true             // 로딩창 show/hide
+    @State private var isLocationHideLoading = true     // 현재위치 로딩 show/hide
+    @State private var myLocation = ""                  // 내위치
+    @State private var hatedFood = ""                   // 싫어하는 음식
     
     // 위치 권한 획득
     var location = LoactionService()
@@ -36,11 +38,6 @@ struct Main: View {
                 }
             })
         }
-    }
-    
-    
-    init() {
-        
     }
     
     var body: some View {
@@ -67,25 +64,43 @@ struct Main: View {
                             .padding(.top, 5)
                     }
                     
-                    Text("선호하는 음식")
+                    HStack {
+                        Button {
+                            self.isShowFavoritModal = true
+                        } label: {
+                            
+                            Text("이걸로 찾아줘").foregroundColor(Color.black)
+                            Image(systemName: "magnifyingglass.circle")
+                        }
+                        .sheet(isPresented: self.$isShowFavoritModal) {
+                            if isLocationHideLoading {
+                                SettingDetail()
+                            }
+                        }
+
+                    }
+                    
                     HStack {
                         Text("면")
                         Text("매운음식")
                     }.padding(.bottom, 20)
                         .padding(.top, 5)
                     Text("싫어하는 음식")
-                    HStack {
-                        Text("마라탕")
-                    }.padding(.bottom, 20)
-                        .padding(.top, 5)
+                    TextField("싫어하는 음식을 입력해 주세요.", text: $hatedFood)
+                        .multilineTextAlignment(.center)
+                        
                     Spacer()
                     Button {
-//                            self.showModal = true
+                        self.isShowReslutModal = true
                         isHideLoading = !isHideLoading
-                                            } label: {
+                    } label: {
                         Text("선택 !!")
-                    }.sheet(isPresented: self.$showModal) {
-                        ResultModal()
+                    }
+                    .sheet(isPresented: self.$isShowReslutModal) {
+                        if isLocationHideLoading {
+                            ResultModal()
+                        }
+                        
                     }
 
                     
