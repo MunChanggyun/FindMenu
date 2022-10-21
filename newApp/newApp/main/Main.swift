@@ -73,6 +73,7 @@ struct Main: View {
                             Image(systemName: "magnifyingglass.circle")
                         }
                         .sheet(isPresented: self.$isShowFavoritModal) {
+                            // sheet 의 isPresented를 동일변수로 사용하려 했으나 이상동작으로 분리
                             if isLocationHideLoading {
                                 SettingDetail()
                             }
