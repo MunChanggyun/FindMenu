@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CustomButton: ButtonStyle {
+struct CustomImageButtonStyle: ButtonStyle {
     var backgroundColor: Color?
     var forgroundColor: Color?
     var radius: CGFloat?

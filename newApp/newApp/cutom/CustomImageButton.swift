@@ -13,6 +13,8 @@ struct CustomImageButton: View {
     @State var isPress: Bool = false
     var buttonAction = {}
     
+    // @escaping :: 함수를 외부에서 변수형태로 사용하기 위해서 사용된다.
+    
     init(_ name: String, size: CGFloat = 50, action buttonAction: @escaping () -> Void = {}) {
         self.name = name
         self.size = size
@@ -21,6 +23,8 @@ struct CustomImageButton: View {
     
     var body: some View {
         Button {
+            buttonAction()
+            
             isPress = !isPress
             
             if isPress {
@@ -28,13 +32,13 @@ struct CustomImageButton: View {
             } else {
                 size = size - 10
             }
-            buttonAction()
+            
         } label: {
             Image(name)
                 .resizable()
                 .frame(width: size, height: size)
                 
-        }.buttonStyle(CustomButton(paddingEdges: .all, paddingSize: 5))
+        }.buttonStyle(CustomImageButtonStyle(paddingEdges: .all, paddingSize: 5))
     }
 }
 
