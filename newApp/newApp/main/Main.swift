@@ -12,7 +12,7 @@ import CoreLocation
 struct Main: View {
     @State private var isShowReslutModal: Bool = false        // 결과 모달 show/hide
     @State private var isShowFavoritModal: Bool = false       // 선호 음식 모달 show/hide
-    @State private var isHideLoading: Bool = true             // 로딩창 show/hide
+    @State private var isShowLoading: Bool = true             // 로딩창 show/hide
     @State private var isLocationHideLoading: Bool = true     // 현재위치 로딩 show/hide
     @State private var myLocation: String = ""                  // 내위치
     @State private var hatedFood: String = ""                   // 싫어하는 음식
@@ -20,6 +20,8 @@ struct Main: View {
     @State private var hateFoods: [String] = []
     @State var toast: Toast? = nil
     @FocusState private var focusState: Bool
+    
+    @ObservedObject var network: NetWork = NetWork.shared
     
     // 위치 권한 획득
     var location = LoactionService()
@@ -77,12 +79,13 @@ struct Main: View {
         }
     }
     
+    
     var body: some View {
         Color("windowBackground").ignoresSafeArea() // 최상단, 최하단 safeArea 까지 배경을 넣기 위해 추가
             .overlay(
                 ZStack{
                     VStack {
-                        ProgressView().hidden(isHideLoading)
+                        ProgressView().hidden(isShowLoading)
                     }
                     VStack {
                         List {
@@ -168,8 +171,13 @@ struct Main: View {
                         
                         Button {
 //                            self.isShowReslutModal = true
-//                            isHideLoading = !isHideLoading
-                            NetWork.init(url: "https://stageapi.i-screamcall.co.kr/app/version/ios").getData()
+//                            isShowLoading = !isShowLoading
+                            if (network.state == .loading) {
+                                isShowLoading = false
+                            } else {
+                                isShowLoading = true
+                            }
+                            NetWork().getData(url: "https://stageapi.i-screamcall.co.kr/app/version/ios")
                         } label: {
                             Text("선택 !!")
                         }
